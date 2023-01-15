@@ -28,7 +28,6 @@ The code in this repository requires the following packages:
 - Keras
 - NumPy
 - SciPy
-- Pillow
 
 ## References
 
