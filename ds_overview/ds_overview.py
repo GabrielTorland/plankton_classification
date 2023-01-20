@@ -10,6 +10,15 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 """Extract the data set from the given paths and return it as a dictionary"""
 def dataset2dict(paths):
+    """
+    Opens a local data set and store it in a dictionary.
+
+    Args:
+        paths (list): list of the paths to the data set(i.e., training, test, validation). 
+
+    Returns:
+        dict(defaultdict(list)): The first key specifies the set (i.e., training, test, validation). The second key specifies the species. The value is a list of images.
+    """    
     # tranlation table
     trans = {1: "train", 2: "test", 3: "validation"}
     # data set in dictionary format
@@ -23,6 +32,12 @@ def dataset2dict(paths):
 
 """Plot the distribution of the data set"""
 def plot_ds_dist(ds):
+    """
+    Plots the distribution of the data set. One plot for each set and one plot for all sets together.
+
+    Args:
+        ds (dict(defaultdict(list))): The first key specifies the set (i.e., training, test, validation). The second key specifies the species. The value is a list of images.
+    """    
     df_train = pd.DataFrame()
     for (key, val) in ds["train"].items():
         df_train = df_train.append({"species": key, "frequency": len(val)}, ignore_index=True)
