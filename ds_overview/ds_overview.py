@@ -91,12 +91,10 @@ def plot_pie_chart(ds):
     plt.setp(autotexts, size=8, weight="bold")
     ax.set_title("Dataset Distribution")
     plt.show()    
-    #plt.pie(sizes, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
-    #plt.axis('equal')
-    #plt.show()
+    
 
 if __name__ == "__main__":
     paths = ["../baseline_training_set/train/", "../baseline_training_set/test/", "../baseline_training_set/validation/"] 
     ds = dataset2dict(paths)
-    # plot_ds_dist(ds)
+    plot_ds_dist(ds)
     plot_pie_chart(ds)
