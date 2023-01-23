@@ -5,14 +5,14 @@ import itertools
 
 
 def make_confusion_matrix(validation_ds, model):
-    """
-    validation_ds: A keras.preprocessing.image.ImageDataGenerator object
-    model: A keras.engine.functional.Functional object
+    """Makes a confusion matrix for the model
 
-    model and validation_ds might be other types, but this is what I used.
+    Args:
+        validation_ds (keras.preprocessing.image.ImageDataGenerator): validation dataset might be another type of dataset
+        model (keras.engine.functional.Functional): model to be evaluated
 
-    returns: A numpy.ndarray object
-    
+    Returns:
+        numpy.ndarray: 2D array
     """
 
     validation_samples = len(validation_ds)
@@ -28,9 +28,11 @@ def make_confusion_matrix(validation_ds, model):
 
 
 def plot_confusion_matrix(matrix, class_names):
-    """
-    matrix: A numpy.ndarray object
-    class_names: A list of strings representing the class names in the order of the matrix
+    """Makes a plot for the confusion matrix
+
+    Args:
+        matrix (numpy.ndarray): Confusion matrix
+        class_names (list): A list of strings representing the class names in the order of the matrixs
     """
 
     plt.figure(figsize=(12, 10))
