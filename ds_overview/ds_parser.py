@@ -5,11 +5,11 @@ import shutil
 
 def copy_jpg_from_root_dir(root_dir, dest_dir):
     """
-    Copies all jpg files from root directory, and subfolders, and sorts them into folders based on the name of the subfolder.
+    Copies all jpg files from root directory, and subfolders, and sorts them into folders based on the name of the subfolder they were copied from.
 
     Args:
-        root_dir (_type_): _description_
-        dest_dir (_type_): _description_
+        root_dir (string): location of the root folder that contains the subfolders
+        dest_dir (string): location of the destination folder where the jpg files will be copied to
     """    
     for root, dirs, files in os.walk(root_dir):
         for file in files:
@@ -22,7 +22,7 @@ def copy_jpg_from_root_dir(root_dir, dest_dir):
 
 
 if __name__ == '__main__':
-    root_dir = "C:\\Users\\Kimda\\dev\ML\\Dataset\\_\\IHLS"
-    dest_dir = "C:\\Users\\Kimda\\dev\\ML\\Test"
+    root_dir = "path\to\root"
+    dest_dir = "path\to\destination"
     copy_jpg_from_root_dir(root_dir, dest_dir)
     
