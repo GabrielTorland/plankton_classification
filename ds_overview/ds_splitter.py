@@ -8,4 +8,4 @@ def split(from_path, to_path)
     
     return: None
     """
-    sf.ratio("./../baseline_training_set/", "./../baseline_trainingset_split/", seed=42, ratio=(0.8,0.1,0.1))
+    sf.ratio(from_path, to_path, seed=42, ratio=(0.8,0.1,0.1))
