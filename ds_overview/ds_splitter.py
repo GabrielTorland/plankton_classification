@@ -1,6 +1,6 @@
 import splitfolders as sf
 
-def split(from_path, to_path, train, val, test)
+def split(from_path, to_path, train, val, test, seed)
     """Splits the dataset into train, val, and test where train is 80%, val is 10% and test is 10%
     
     from_path (str): Path to folder containing unsplit images
@@ -8,7 +8,8 @@ def split(from_path, to_path, train, val, test)
     train (float): Percentage of data to trainable data
     val (float): Percentage of data to be validation data
     test (float): Percentage of data to be test data
+    seed (float): Seed for the image selection
     
     
     """
-    sf.ratio(from_path, to_path, seed=42, ratio=(train,val,test))
+    sf.ratio(from_path, to_path, seed=seed, ratio=(train,val,test))
