@@ -69,8 +69,32 @@ def plot_ds_dist(ds):
     #h.bar_label(h.containers[0])
     plt.show()
 
+"""Plot a pie chart of the data set"""
+def plot_pie_chart(ds):
+    """
+    Plots a pie chart of the data set.
+
+    Args:
+        ds (dict(defaultdict(list))): The first key specifies the set (i.e., training, test, validation). The second key specifies the species. The value is a list of images.
+    """    
+    fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
+
+    
+    labels = []
+    sizes = []
+    for (key, val) in ds["train"].items():
+        labels.append(key)
+        sizes.append(len(val))
+    colors = ['yellowgreen', 'gold', 'lightskyblue', 'lightcoral', 'red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan', 'magenta']
+    wedges, autotexts = ax.pie(sizes, labels=labels, colors=colors, textprops=dict(color="w"))
+    ax.legend(wedges, labels, title='Species', loc='center left', bbox_to_anchor=(1, 0, 0.5, 1))
+    plt.setp(autotexts, size=8, weight="bold")
+    ax.set_title("Dataset Distribution")
+    plt.show()    
+    
 
 if __name__ == "__main__":
     paths = ["../baseline_training_set/train/", "../baseline_training_set/test/", "../baseline_training_set/validation/"] 
     ds = dataset2dict(paths)
     plot_ds_dist(ds)
+    plot_pie_chart(ds)
