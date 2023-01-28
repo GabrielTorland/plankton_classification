@@ -2,6 +2,7 @@ import os
 import shutil
 import pandas as pd
 import argparse
+from datetime import datetime
 import time
 
 
@@ -32,15 +33,26 @@ def extract_data(station_csv_dir, dest_dir, images_locations):
     notfound_count = 0 
     found_count = 0
     start = time.time()
+    
     # read in the csv files in the station_csv_dir
     for file in os.listdir(station_csv_dir):
         if not file.endswith(".csv"):
             continue
         df = pd.read_csv(os.path.join(station_csv_dir, file))
         # iterate through the rows of the csv file, only using the id and classification_label columns
-        for id, label in zip(list(df["Id"]), list(df["validatedClass"])):
+        for id, label, date in zip(list(df["Id"]), list(df["validatedClass"]), list(df["Date"])):
             # check if the id or label is a float (i.e., NaN in this case)
-            if isinstance(label, float) or isinstance(id, float):
+            if isinstance(label, float) or isinstance(id, float) or isinstance(date, float):
+                continue
+            # convert the date to a datetime object
+            if "/" in date:
+                date_obj = datetime.strptime(date, "%m/%d/%Y")
+            elif "-" in date:
+                date_obj = datetime.strptime(date, "%Y-%m-%d")
+            else:
+                raise NotImplementedError("Unknown date format")
+            # Exclude the December images from all years except 2016 and 2018
+            if date_obj.month == 12 and date_obj.year not in [2016, 2018]:
                 continue
             # check if the id specified in the csv file is in the raw dataset 
             if id not in images_locations:
@@ -69,6 +81,9 @@ if __name__ == '__main__':
     parser.add_argument("--csv", help="Path to the directory that contains the csv files")
     parser.add_argument("--dest", help="Path to the directory to store the extracted data")
     args = parser.parse_args()
-    images_locations = get_images_locations(args.root)
+    #images_locations = get_images_locations(args.root)
 
-    extract_data(args.csv, args.dest, images_locations)
+    #extract_data(args.csv, args.dest, images_locations)
+
+    images_locations = get_images_locations("/home/olepedersen/Downloads/IHLS")
+    extract_data("/home/olepedersen/Downloads/station_csv", "/home/olepedersen/source/repos/plankton_classification/baseline_training_set", images_locations)
