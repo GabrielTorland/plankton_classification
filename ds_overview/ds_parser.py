@@ -81,9 +81,6 @@ if __name__ == '__main__':
     parser.add_argument("--csv", help="Path to the directory that contains the csv files")
     parser.add_argument("--dest", help="Path to the directory to store the extracted data")
     args = parser.parse_args()
-    #images_locations = get_images_locations(args.root)
+    images_locations = get_images_locations(args.root)
 
-    #extract_data(args.csv, args.dest, images_locations)
-
-    images_locations = get_images_locations("/home/olepedersen/Downloads/IHLS")
-    extract_data("/home/olepedersen/Downloads/station_csv", "/home/olepedersen/source/repos/plankton_classification/baseline_training_set", images_locations)
+    extract_data(args.csv, args.dest, images_locations)
