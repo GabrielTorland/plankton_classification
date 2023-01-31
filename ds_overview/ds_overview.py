@@ -19,7 +19,7 @@ def dataset2dict(path):
         dict(defaultdict(list)): The first key specifies the set (i.e., training, test, validation). The second key specifies the species. The value is the number of images.
     """    
     # data set in dictionary format
-    ds = {"train": defaultdict(list), "test": defaultdict(list), "validation": defaultdict(list)}   
+    ds = {"train": defaultdict(list), "test": defaultdict(list), "val": defaultdict(list)}   
     for folder in os.listdir(path):
         for category in os.listdir(path + folder):
             ds[folder][category.replace('_', ' ')] = len(os.listdir(path + folder + "/" + category))
@@ -39,13 +39,13 @@ def plot_ds_dist(ds):
     for (key, val) in ds["test"].items():
         df_test = df_test.append({"species": key, "frequency": val}, ignore_index=True)
     df_val = pd.DataFrame()
-    for (key, val) in ds["validation"].items():
+    for (key, val) in ds["val"].items():
         df_val = df_val.append({"species": key, "frequency": val}, ignore_index=True)
     df_all = pd.DataFrame(columns=["set", "species", "frequency"])
-    for item0, item1, item2 in zip(ds["test"].items(), ds["train"].items(), ds["validation"].items()):
+    for item0, item1, item2 in zip(ds["test"].items(), ds["train"].items(), ds["val"].items()):
         df_all.loc[len(df_all)] = ["test", item0[0], item0[1]]
         df_all.loc[len(df_all)] = ["train", item1[0], item1[1]]
-        df_all.loc[len(df_all)] = ["validation", item2[0], item2[1]]
+        df_all.loc[len(df_all)] = ["val", item2[0], item2[1]]
     h = sns.barplot(x="frequency", y="species", data=df_train, ci=0)
     h.set_title("Training Set Distribution")
     #h.bar_label(h.containers[0])
