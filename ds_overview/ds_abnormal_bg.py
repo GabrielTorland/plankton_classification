@@ -77,7 +77,7 @@ def get_background_dist(root_dir):
     return avg_bgs, paths
 
 
-def manual_validate_anomalies(avg_bgs, paths, std_factor=4):
+def manually_validate_anomalies(avg_bgs, paths, std_factor=4):
     """This function provides a way manually validate the background distribution by visualization.
 
     Args:
@@ -116,12 +116,85 @@ def manual_validate_anomalies(avg_bgs, paths, std_factor=4):
                 print("Image successfully moved.")
             print()
 
+
+def copy_anomalies(avg_bgs, paths, std_factor=4):
+    """This function provides a way to copy the images that are identified as anomalies to a new directory.
+
+    Args:
+        avg_bgs (list): List of average background pixel values
+        paths (list): List of image paths
+        std_factor (int, optional): Standard deviation factor used to identify anomalies. Defaults value is 4.
+    
+    Returns:
+        dictionary: Dictionary of image names and their paths
+    """    
+    avg_bgs = np.array(avg_bgs)
+    # calculate the standard deviation of the average background pixel values
+    std = np.std(avg_bgs)
+    # calculate the mean of the average background pixel values
+    mean = np.mean(avg_bgs)
+    anomalies = {}
+    for i, avg_bg in enumerate(avg_bgs):
+        if abs(avg_bg - mean) > std_factor*std:
+            if not os.path.exists("anomalies"):
+                os.mkdir("anomalies")
+            dir = "anomalies/" + paths[i].split("/")[-2]
+            if not os.path.exists(dir):
+                os.mkdir(dir)
+            shutil.copy(paths[i], dir + "/" + paths[i].split("/")[-1])
+            anomalies[paths[i].split("/")[-1]] = paths[i]
+            print("Image successfully copied.")
+    return anomalies
+
+
+def delete_anomalies(anomalies):
+    """This function provides a way to delete the images that are identified as anomalies.
+
+    Args:
+        anomalies (dictionary): Dictionary of image names and their paths
+    """    
+    for root, dirs, files in os.walk("anomalies"):
+        for file in files:
+            os.remove(anomalies[file])
+
+
+def store_anomalies(anomalies, path="anomaly_path.json"):
+    """This function provides a way to store the anomalies in a json file.
+
+    Args:
+        anomalies (dictionary): Dictionary of image names and their paths
+        path (str, optional): Path to the json file. Defaults to "anomalies.json".
+    """    
+    with open(path, "w") as f:
+        json.dump(anomalies, f)
+
+
+def open_anomalies(path="anomaly_path.json"):
+    """This function provides a way to open the anomalies from a json file.
+
+    Args:
+        path (str, optional): Path to the json file. Defaults to "anomalies.json".
+
+    Returns:
+        dictionary: Dictionary of image names and their paths
+    """    
+    with open(path, "r") as f:
+        anomalies = json.load(f)
+    return anomalies
+
+
 if __name__ == "__main__":
     #avg_bgs, paths = get_background_dist("/home/olepedersen/source/repos/plankton_classification/baseline_training_set/")
     # or 
-    avg_bgs, paths = load_dist("background_dist.json") # requires a json file with the distribution and associated pathsn
+    #avg_bgs, paths = load_dist("background_dist.json") # requires a json file with the distribution and associated pathsn
 
     # uncomment to store the distribution and associated paths
     #store_dist("background_dist.json", avg_bgs, paths) 
 
-    manual_validate_anomalies(avg_bgs, paths)
+    #manually_validate_anomalies(avg_bgs, paths)
+    #anomalies = copy_anomalies(avg_bgs, paths)
+    #store_anomalies(anomalies)
+    anomalies = open_anomalies()
+    delete_anomalies(anomalies)
+
+
