@@ -184,7 +184,7 @@ def open_anomalies(path="anomaly_path.json"):
 
 
 if __name__ == "__main__":
-    #avg_bgs, paths = get_background_dist("/home/olepedersen/source/repos/plankton_classification/baseline_training_set/")
+    #avg_bgs, paths = get_background_dist("path/to/dataset")
     # or 
     #avg_bgs, paths = load_dist("background_dist.json") # requires a json file with the distribution and associated pathsn
 
