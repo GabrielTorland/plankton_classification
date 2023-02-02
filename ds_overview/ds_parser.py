@@ -4,6 +4,11 @@ import pandas as pd
 import argparse
 from datetime import datetime
 import time
+from collections import defaultdict
+import uuid
+from PIL import Image
+from PIL import UnidentifiedImageError
+from ds_splitter import split
 
 
 def get_images_locations(root_dir):
@@ -13,22 +18,24 @@ def get_images_locations(root_dir):
         root_dir (string): Path to the root directory of the raw dataset 
 
     Returns:
-        dictionary/map: A dictionary that maps the id of the image to the location of the image (i.e., the key is the id of the image, and the value is the system path to the image) 
+        defaultdeict(list) : A dictionary that maps the id of the image to the location of the image (i.e., the key is the id of the image, and the value is the system path to the image) 
     """    
-    images_locations = {}
+    images_locations = defaultdict(list) 
     for root, dirs, files in os.walk(root_dir):
         for file in files:
             if file.endswith(".jpg"):
-                images_locations[file[:len(file)-4]] = os.path.join(root, file)
+                images_locations[file[:len(file)-4]].append(os.path.join(root, file))
+                if len(images_locations[file[:len(file)-4]]) > 1:
+                    print("Duplicate image: ", file[:len(file)-4])
     return images_locations
 
-def extract_data(station_csv_dir, dest_dir, images_locations):
+def extract_data(station_csv_dir, dest_dir, images_locations, log_file):
     """Extract the raw data and store it in a more organized manner.
 
     Args:
         station_csv_dir (string): Path to the directory that contains the csv files  
         dest_dir (string): Path to the directory to store the extracted data  
-        images_locations (dictionary): A dictionary that maps the id of the image to the location of the image (i.e., the key is the id of the image, and the value is the system path to the image) 
+        images_locations (defaultdict(list)): A dictionary that maps the id of the image to the location of the image (i.e., the key is the id of the image, and the value is the system path to the image) 
     """
     notfound_count = 0 
     found_count = 0
@@ -44,6 +51,7 @@ def extract_data(station_csv_dir, dest_dir, images_locations):
             # check if the id or label is a float (i.e., NaN in this case)
             if isinstance(label, float) or isinstance(id, float) or isinstance(date, float):
                 continue
+
             # convert the date to a datetime object
             if "/" in date:
                 date_obj = datetime.strptime(date, "%m/%d/%Y")
@@ -51,36 +59,55 @@ def extract_data(station_csv_dir, dest_dir, images_locations):
                 date_obj = datetime.strptime(date, "%Y-%m-%d")
             else:
                 raise NotImplementedError("Unknown date format")
+
             # Exclude the December images from all years except 2016 and 2018
             if date_obj.month == 12 and date_obj.year not in [2016, 2018]:
                 continue
+            
             # check if the id specified in the csv file is in the raw dataset 
             if id not in images_locations:
                 # write to a log file
-                with open("unkown_ids.txt", "a") as f:
+                with open(log_file, "a") as f:
                     f.write(id + "\n")
                 notfound_count += 1
                 continue
-            # get the path to the image
-            img_path = images_locations[id]
-            tmp = os.path.join(dest_dir, label)
-            if not os.path.exists(tmp):
-                os.makedirs(tmp)
-            # copy the image to the destination folder
-            shutil.copy(img_path, os.path.join(tmp, id + ".jpg"))
-            found_count += 1
-            print("Transferred images: ", found_count)
+
+            # move the images to the destination folder
+            for img_path in images_locations[id]:
+                # check if the image is broken
+                try:
+                    im = Image.open(img_path)
+                    im.verify()
+                except UnidentifiedImageError:
+                    continue
+                tmp = os.path.join(dest_dir, label)
+                if not os.path.exists(tmp):
+                    os.makedirs(tmp)
+                # copy the image to the destination folder
+                shutil.copy(img_path, os.path.join(tmp, uuid.uuid4().hex + ".jpg"))
+                found_count += 1
+                print("Transferred images: ", found_count)
 
     print("Finished organizing data, used approximately ", time.time() - start, " seconds")
     print("Number of successfully transferred images: ", found_count)
-    print("Number of unknown ids detected: ", notfound_count)
+    print(f"Found {notfound_count} images that were not found in the raw dataset.")
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Parse the raw dataset to a more organized dataset for training a machine learning model")
-    parser.add_argument("--root", help="Path to the root directory of the raw dataset")
-    parser.add_argument("--csv", help="Path to the directory that contains the csv files")
-    parser.add_argument("--dest", help="Path to the directory to store the extracted data")
+    parser = argparse.ArgumentParser(prog="Dataset Parser", description="Parse and convert the raw dataset into a suitable format for classification algorithms.", epilog="This program is a part of a bachelor thesis project.")
+    parser.add_argument('-r', "--root", help="Path to the root directory of the raw dataset")
+    parser.add_argument('-c', "--csv", help="Path to the directory that contains the csv files")
+    parser.add_argument('-d', "--dest", help="Path to the directory to store the extracted data")
+    parser.add_argument('-l', "--log", default="./unkown_ids.txt", help="Path to the log file")
+    parser.add_argument("--split", type=bool,default=True, help="Split the dataset into test, train, and validation sets")
     args = parser.parse_args()
     images_locations = get_images_locations(args.root)
-
-    extract_data(args.csv, args.dest, images_locations)
+    if args.split:
+        tmp_dir = uuid.uuid4().hex
+        extract_data(args.csv, tmp_dir, images_locations, args.log)
+        # Don't provide the split argument for none default split arguments.
+        # Configure the split arguments by executing the ds_splitter.py script directly. 
+        split(tmp_dir, args.dest, 0.8, 0.1, 0.1, 1337)
+        # remove the temporary directory
+        shutil.rmtree(tmp_dir)
+    else:
+        extract_data(args.csv, args.dest, images_locations, args.log)
