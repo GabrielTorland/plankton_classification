@@ -22,8 +22,7 @@ def get_images_locations(root_dir):
     images_locations = defaultdict(list) 
     for root, dirs, files in os.walk(root_dir):
         for file in files:
-            # Add the jpg file if it is inside the raw directory
-            if file.endswith(".jpg") and "raw" in root:
+            if file.endswith(".jpg"):
                 images_locations[file[:len(file)-4]].append(os.path.join(root, file))
     return images_locations
 
@@ -45,7 +44,7 @@ def extract_data(station_csv_dir, dest_dir, images_locations, log_file):
             continue
         df = pd.read_csv(os.path.join(station_csv_dir, file))
         # iterate through the rows of the csv file, only using the id and classification_label columns
-        for id, label in zip(list(df["Id"]), list(df["validatedClass"])):
+        for id, label, height, width in zip(list(df["Id"]), list(df["validatedClass"]), list("Image.Height"), list("Image.Width")):
             # check if the id or label is a float (i.e., NaN in this case)
             if isinstance(label, float) or isinstance(id, float):
                 continue 
@@ -65,6 +64,9 @@ def extract_data(station_csv_dir, dest_dir, images_locations, log_file):
                     im = Image.open(img_path)
                     im.verify()
                 except UnidentifiedImageError:
+                    continue
+                im = Image.open(img_path)
+                if im.width != width or im.height != height:
                     continue
                 tmp = os.path.join(dest_dir, label)
                 if not os.path.exists(tmp):
