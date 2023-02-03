@@ -22,10 +22,9 @@ def get_images_locations(root_dir):
     images_locations = defaultdict(list) 
     for root, dirs, files in os.walk(root_dir):
         for file in files:
-            if file.endswith(".jpg"):
+            # Add the jpg file if it is inside the raw directory
+            if file.endswith(".jpg") and "raw" in root:
                 images_locations[file[:len(file)-4]].append(os.path.join(root, file))
-                if len(images_locations[file[:len(file)-4]]) > 1:
-                    print("Duplicate image: ", file[:len(file)-4])
     return images_locations
 
 def extract_data(station_csv_dir, dest_dir, images_locations, log_file):
