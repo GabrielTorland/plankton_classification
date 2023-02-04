@@ -18,6 +18,8 @@ mkdir processed_dataset\\logs
 mkdir processed_dataset\\plots
 echo "moving dataset"
 move dataset processed_dataset\\dataset
+echo "moving anomalies"
+move anomalies processed_dataset\\anomalies
 echo "moving files"
 move anomaly_path.json processed_dataset\\utils\\anomaly_path.json
 move background_dist.json processed_dataset\\utils\\anomaly_dist.json
@@ -46,6 +48,8 @@ mkdir raw_dataset\\logs
 mkdir raw_dataset\\plots
 echo "moving dataset"
 move dataset raw_dataset\\dataset
+echo "moving anomalies"
+move anomalies raw_dataset\\anomalies
 echo "moving files"
 move anomaly_path.json raw_dataset\\utils\\anomaly_path.json
 move background_dist.json raw_dataset\\utils\\anomaly_dist.json
@@ -57,4 +61,3 @@ move dist_pole.png raw_dataset\\plots\\dist_pole.png
 move dist_train.png raw_dataset\\plots\\dist_train.png
 move dist_test.png raw_dataset\\plots\\dist_test.png
 move dist_val.png raw_dataset\\plots\\dist_val.png
-
