@@ -52,7 +52,7 @@ def get_unprocessed_image(images, width, height):
         raw_images.append(img_path)
     return raw_images 
 
-def extract_data(station_csv_dir, dest_dir, images_locations, log_file, processed, random_name):
+def extract_data(station_csv_dir, dest_dir, images_locations, log_file, random_name):
     """Extract the raw data and store it in a more organized manner.
 
     Args:
@@ -87,20 +87,12 @@ def extract_data(station_csv_dir, dest_dir, images_locations, log_file, processe
                 notfound_count += 1
                 print("Not found: ", id)
                 continue
-
-            if processed: # remove the processed counterparts of the duplicate images
-                if len(images_locations[id]) > 1:
-                    image_path_s = get_unprocessed_image(images_locations[id], width, height)
-                    if len(image_path_s) > 1:
-                        print("Found multiple images with the same id: ", id)
-                        continue
-                else:
-                    image_path_s = images_locations[id]    
-            else: # remove all the processed images
+            
+            # get the correct image path
+            if len(images_locations[id]) > 1:
                 image_path_s = get_unprocessed_image(images_locations[id], width, height)
-                if len(image_path_s) > 1:
-                    print("Found multiple images with the same id: ", id)
-                    continue
+            else:
+                image_path_s = images_locations[id]    
 
             # ignore duplicates with identical resolution  
             if len(image_path_s) != 1: continue
@@ -131,7 +123,6 @@ if __name__ == '__main__':
     parser.add_argument('-c', "--csv", help="Path to the directory that contains the csv files")
     parser.add_argument('-d', "--dest", help="Path to the directory to store the extracted data")
     parser.add_argument('-l', "--log", default="./unkown_ids.txt", help="Path to the log file")
-    parser.add_argument("-p", "--processed", type=bool, default=True, help="Include some of the processed images (default: True)")
     parser.add_argument("--split", type=bool,default=True, help="Split the dataset into test, train, and validation sets (default: True)")
     parser.add_argument("--random_name", type=bool, default=False, help="Use a random name for images (default: False)")
     args = parser.parse_args()
@@ -139,11 +130,11 @@ if __name__ == '__main__':
     if args.split:
         # create a temporary directory to store the extracted data
         tmp_dir = uuid.uuid4().hex
-        extract_data(args.csv, tmp_dir, images_locations, args.log, args.processed, args.random_name)
+        extract_data(args.csv, tmp_dir, images_locations, args.log, args.random_name)
         # Don't provide the split argument for none default split arguments.
         # Configure the split arguments by executing the ds_splitter.py script directly. 
         split(tmp_dir, args.dest, 0.8, 0.1, 0.1, 1337)
         # remove the temporary directory
         shutil.rmtree(tmp_dir)
     else:
-        extract_data(args.csv, args.dest, images_locations, args.log, args.processed, args.random_name)
+        extract_data(args.csv, args.dest, images_locations, args.log, args.random_name)
