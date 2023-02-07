@@ -218,19 +218,20 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--copy", type=bool, default=False, help="Copy the anomalies to a new directory.")
     parser.add_argument("-m", "--manual", type=bool, default=False, help="Manually validate the anomalies.")
     parser.add_argument("-r", "--remove", type=bool, default=False, help="Remove the anomalies.")
+    parser.add_argument("--std", type=int, default=4, help="Standard deviation factor used to identify anomalies.")
     args = parser.parse_args()
 
     if args.source:
-        avg_bgs, paths = get_background_dist("../baseline_training_set")
+        avg_bgs, paths = get_background_dist(args.source)
         # store the distribution and associated paths in a json file
         store_dist("background_dist.json", avg_bgs, paths) 
     else:
         avg_bgs, paths = load_dist("background_dist.json") # requires a json file with the distribution and associated pathsn
     if args.copy:    
-        anomalies = copy_anomalies(avg_bgs, paths)
+        anomalies = copy_anomalies(avg_bgs, paths, args.std)
         store_anomalies(anomalies)
     if args.manual:
-        manually_validate_anomalies(avg_bgs, paths)
+        manually_validate_anomalies(avg_bgs, paths, args.std)
     if args.remove:
         anomalies = open_anomalies()
         delete_anomalies(anomalies)

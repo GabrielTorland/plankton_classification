@@ -52,6 +52,23 @@ def get_unprocessed_image(images, width, height):
         raw_images.append(img_path)
     return raw_images 
 
+def validate_images(images, width, height):
+    count = 0
+    new_images = []
+    for img_path in images:
+        # check if the image is broken
+        try:
+            img = Image.open(img_path)
+            img.verify()
+        except UnidentifiedImageError as e:
+            print(e)
+            continue
+        # ignore the image if the width and height do not match the CSV file
+        if img.size[0] != width or img.size[1] != height:
+            count += 1 
+        new_images.append(img_path)
+    return new_images, count 
+
 def extract_data(station_csv_dir, dest_dir, images_locations, log_file, random_name):
     """Extract the raw data and store it in a more organized manner.
 
@@ -64,8 +81,9 @@ def extract_data(station_csv_dir, dest_dir, images_locations, log_file, random_n
     """
     notfound_count = 0 
     found_count = 0
+    processed = 0
     start = time.time()
-    
+
     # read in the csv files in the station_csv_dir
     for file in os.listdir(station_csv_dir):
         if not file.endswith(".csv"):
@@ -90,9 +108,13 @@ def extract_data(station_csv_dir, dest_dir, images_locations, log_file, random_n
             
             # get the correct image path
             if len(images_locations[id]) > 1:
+                print("Found duplicate images: ", images_locations[id])
                 image_path_s = get_unprocessed_image(images_locations[id], width, height)
             else:
-                image_path_s = images_locations[id]    
+                image_path_s = images_locations[id]
+                image_path_s, val = validate_images(image_path_s, width, height)
+                processed += val
+
 
             # ignore duplicates with identical resolution  
             if len(image_path_s) != 1: continue
@@ -112,7 +134,7 @@ def extract_data(station_csv_dir, dest_dir, images_locations, log_file, random_n
                 print("Transferred images: ", found_count)
 
     print(f"Finished organizing data, used approximately {time.time() - start} seconds.")
-    print(f"Number of successfully transfers: {found_count}.")
+    print(f"Number of successfully transfers: {found_count}, inwhich {processed} were processed and {found_count-processed} not processed.")
     print(f"Found {notfound_count} images that were not found in the raw dataset.")
 
 if __name__ == '__main__':
