@@ -35,13 +35,22 @@ def add_padding(image, bg_color):
     height, width = image.shape[0], image.shape[1]
     # get the difference between the dimensions
     diff = height - width
+    
 
     if diff > 0:
-        pad = diff // 2
-        image = cv2.copyMakeBorder(image, 0, 0, pad, pad, cv2.BORDER_CONSTANT, value=bg_color)
-    else:
-        pad = -diff // 2
-        image = cv2.copyMakeBorder(image, pad, pad, 0, 0, cv2.BORDER_CONSTANT, value=bg_color)
+        if diff % 2 == 1:
+            pad = diff // 2
+            image = cv2.copyMakeBorder(image, 0, 0, pad+1, pad, cv2.BORDER_CONSTANT, value=bg_color)
+        else:
+            pad = diff // 2
+            image = cv2.copyMakeBorder(image, 0, 0, pad, pad, cv2.BORDER_CONSTANT, value=bg_color)
+    elif diff < 0:
+        if diff % 2 == 1:
+            pad = -diff // 2
+            image = cv2.copyMakeBorder(image, pad+1, pad, 0, 0, cv2.BORDER_CONSTANT, value=bg_color)
+        else:    
+            pad = -diff // 2
+            image = cv2.copyMakeBorder(image, pad, pad, 0, 0, cv2.BORDER_CONSTANT, value=bg_color)
     return image
 
     
@@ -93,11 +102,9 @@ def find_preprocess_images(path):
             img = cv2.imread(os.path.join(root, file))
             asp_ratio = check_aspect_ratio(img)
             # if the aspect ratio is not 1.0, then add padding and copy to new directory
-            if asp_ratio == 1.0: continue
+            if asp_ratio == 1: continue
             bgr_mode_values = edge_pixel_values(img)
             img_padded = add_padding(img, bgr_mode_values)
-            if not os.path.exists('padded'):
-                os.makedirs('padded')
             # determine if the os is windows or linux    
             cv2.imwrite(os.path.join(root, file), img_padded)
                 
@@ -107,7 +114,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Pads the images with aspect ration other than 1.0")
     parser.add_argument("-s", "--source", type=str, help="Path to the directory containing the images")
     args = parser.parse_args()
-    find_preprocess_images(args.source)
+    find_preprocess_images("dataset")
 
 
 
