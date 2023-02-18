@@ -1,5 +1,4 @@
 import splitfolders as sf
-import sys
 import os
 import argparse
 

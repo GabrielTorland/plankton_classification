@@ -46,22 +46,37 @@ def plot_ds_dist(ds):
         df_all.loc[len(df_all)] = ["test", item0[0], item0[1]]
         df_all.loc[len(df_all)] = ["train", item1[0], item1[1]]
         df_all.loc[len(df_all)] = ["val", item2[0], item2[1]]
-    h = sns.barplot(x="frequency", y="species", data=df_train, ci=0)
+    h = sns.barplot(x="species", y="frequency", data=df_train, ci=0)
+    plt.xticks(rotation=90)
     h.set_title("Training Set Distribution")
     #h.bar_label(h.containers[0])
-    plt.show()
-    h = sns.barplot(x="frequency", y="species", data=df_test, ci=0)
+    plt.subplots_adjust(right=1.4, left=0)
+    plt.savefig("dist_train.png", bbox_inches='tight')
+    h = sns.barplot(x="species", y="frequency", data=df_test, ci=0)
+    plt.xticks(rotation=90)
     h.set_title("Test Set Distribution")
     #h.bar_label(h.containers[0])
-    plt.show()
-    h = sns.barplot(x="frequency", y="species", data=df_val, ci=0)
+    plt.subplots_adjust(right=1.4, left=0)
+    plt.savefig("dist_test.png", bbox_inches='tight')
+    h = sns.barplot(x="species", y="frequency", data=df_val, ci=0)
+    plt.xticks(rotation=90)
     h.set_title("Validation Set Distribution")
     #h.bar_label(h.containers[0])
-    plt.show()
+    plt.subplots_adjust(right=1.4, left=0)
+    plt.savefig("dist_val.png", bbox_inches='tight')
     h = sns.barplot(x="species", y="frequency", data=df_all, ci=0, hue="set")
+    plt.xticks(rotation=90)
     h.set_title("Data Set Distribution")
     #h.bar_label(h.containers[0])
-    plt.show()
+    plt.subplots_adjust(right=1.4, left=0)
+    plt.savefig("dist_pole.png", bbox_inches='tight')
+
+    # write the exact percentage of each class in the data t
+    for (key, val) in ds["train"].items():
+        with open("ds_percentage.txt", "a") as f:
+            # the distribution is the same for all sets
+            # that's why we can only use the training set
+            f.write(key + ": " + str(val / sum(ds["train"].values()) * 100) + '\n')
 
 
 def plot_pie_chart(ds):
@@ -83,8 +98,7 @@ def plot_pie_chart(ds):
     ax.legend(wedges, labels, title='Species', loc='center left', bbox_to_anchor=(1, 0, 0.5, 1))
     plt.setp(autotexts, size=8, weight="bold")
     ax.set_title("Dataset Distribution")
-    plt.show()    
-    
+    plt.savefig("dist_pie_chart.png", bbox_inches='tight')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Plots the distribution of the data set.")
