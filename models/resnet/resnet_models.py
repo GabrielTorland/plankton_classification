@@ -18,31 +18,21 @@ def freeze_base_model(model):
     """    
     model.trainable = False
 
-def add_layers(base_model, classes):
+def classifier(inputs, classes):
     """ Adds trainable layers to the base model. 
 
     Args:
-        base_model (tensorflow.keras.applications.*): Base model. 
+        inputs (tensorflow.keras.applications.*): Base model. 
         classes (_type_):  Number of classes. 
     Returns:
-        tensorflow.keras.models.Sequential: ResNet model with trainable layers.
+        tensorflow.keras.layers.Dense: Class probabilies, i.e., prediction.
     """   
-    model = Sequential()
-    model.add(base_model)
-    model.add(Flatten())
-    model.add(BatchNormalization())
-    model.add(Dense(256, activation="relu"))
-    model.add(Dropout(0.5))
-    model.add(BatchNormalization())
-    model.add(Dense(128, activation="relu"))
-    model.add(Dropout(0.5))
-    model.add(BatchNormalization())
-    model.add(Dense(64, activation="relu"))
-    model.add(Dropout(0.5))
-    model.add(BatchNormalization())
-    model.add(Dense(classes, activation="softmax"))
-
-    return model
+    x = GlobalAveragePooling2D()(inputs)
+    x = Flatten()(x)
+    x = Dense(1024, activation='relu')(x)
+    x = Dense(512, activation='relu')(x)
+    x = Dense(classes, activation='softmax')(x)
+    return x  
 
 
 def create_resnet50_model(classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT_INPUT_SHAPE):
@@ -60,18 +50,21 @@ def create_resnet50_model(classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT_
     """
 
     # create a base model
-    base_model = ResNet50(
+    feature_extractor = ResNet50(
         include_top=False, # do not include the classification layer
         weights=weights, # load pre-trained weights
         input_shape=input_shape # specify input shape
     ) 
 
     # freeze the base model
-    freeze_base_model(base_model)
+    freeze_base_model(feature_extractor)
 
     # add trainable layers
-    model = add_layers(base_model, classes) 
+    ouputs = classifier(feature_extractor, classes)
 
+    # create the model
+    model = Model(inputs=feature_extractor.input, outputs=ouputs)
+    
     return model
 
 
