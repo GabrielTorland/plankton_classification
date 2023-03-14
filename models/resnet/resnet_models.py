@@ -60,7 +60,7 @@ def create_resnet50_model(classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT_
     freeze_base_model(feature_extractor)
 
     # add trainable layers
-    ouputs = classifier(feature_extractor, classes)
+    ouputs = classifier(feature_extractor.output, classes)
 
     # create the model
     model = Model(inputs=feature_extractor.input, outputs=ouputs)
