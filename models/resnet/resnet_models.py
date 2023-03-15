@@ -16,23 +16,8 @@ def freeze_base_model(model):
     Args:
         model (tensorflow.keras.applications.*): Base model. 
     """    
-    model.trainable = False
-
-def classifier(inputs, classes):
-    """ Adds trainable layers to the base model. 
-
-    Args:
-        inputs (tensorflow.keras.applications.*): Base model. 
-        classes (_type_):  Number of classes. 
-    Returns:
-        tensorflow.keras.layers.Dense: Class probabilies, i.e., prediction.
-    """   
-    x = GlobalAveragePooling2D()(inputs)
-    x = Flatten()(x)
-    x = Dense(1024, activation='relu')(x)
-    x = Dense(512, activation='relu')(x)
-    x = Dense(classes, activation='softmax')(x)
-    return x  
+    for layer in model.layers:
+        layer.trainable = False
 
 
 def create_resnet50_model(classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT_INPUT_SHAPE):
@@ -60,10 +45,13 @@ def create_resnet50_model(classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT_
     freeze_base_model(feature_extractor)
 
     # add trainable layers
-    ouputs = classifier(feature_extractor.output, classes)
+    x = feature_extractor.output
+    x = GlobalAveragePooling2D()(x)
+    x = Dense(1024, activation='relu')(x)
+    predictions = Dense(classes, activation='softmax')(x)
 
     # create the model
-    model = Model(inputs=feature_extractor.input, outputs=ouputs)
+    model = Model(inputs=feature_extractor.input, outputs=predictions)
     
     return model
 
