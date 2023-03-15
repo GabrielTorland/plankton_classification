@@ -4,6 +4,7 @@ from tensorflow.keras import Model
 from tensorflow.keras.applications import ResNet50, ResNet50V2, ResNet101, ResNet101V2, ResNet152, ResNet152V2
 from tensorflow.keras.models import Sequential
 from tensorflow.image import resize
+from tensorflow.keras.optimizers import Adam
 
 
 DEFAULT_INPUT_SHAPE = (224, 224, 3)
@@ -52,6 +53,9 @@ def create_resnet50_model(classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT_
 
     # create the model
     model = Model(inputs=feature_extractor.input, outputs=predictions)
+    
+    # compile the model
+    model.compile(loss="categorical_crossentropy", optimizer=Adam(), metrics=["accuracy"])
     
     return model
 
