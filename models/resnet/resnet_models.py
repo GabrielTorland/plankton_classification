@@ -162,17 +162,36 @@ def create_resnet152_model(classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT
     """
 
     # create a base model
-    base_model = ResNet152(
+    feature_extractor = ResNet152(
         include_top=False, # do not include the classification layer
         weights=weights, # load pre-trained weights
         input_shape=input_shape # specify input shape
     ) 
 
     # freeze the base model
-    freeze_base_model(base_model)
+    freeze_base_model(feature_extractor)
 
-    # add trainable layers
-    model = add_layers(base_model, classes) 
+    x = feature_extractor.output 
+
+    # change the spatial dimensions to 1x1
+    # thus, the output becomes (batch_size, 1, 1, 2048)
+    x = GlobalAveragePooling2D()(x)
+
+    # fully connected layer for intermediate features
+    x = Dense(1024, activation='relu')(x)
+
+    # dropout layer to prevent overfitting
+    # 50% of the input will be dropped to zero
+    x = Dropout(0.5)(x)
+
+    # final output layer
+    predictions = Dense(classes, activation='softmax')(x)
+
+    # create the model
+    model = Model(inputs=feature_extractor.input, outputs=predictions)
+    
+    # compile the model
+    model.compile(loss="categorical_crossentropy", optimizer=Adam(), metrics=["accuracy"])
 
     return model 
 
@@ -191,16 +210,35 @@ def create_resnet152v2_model(classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAU
     """
 
     # create a base model
-    base_model = ResNet152V2(
+    feature_extractor = ResNet152V2(
         include_top=False, # do not include the classification layer
         weights=weights, # load pre-trained weights
         input_shape=input_shape # specify input shape
     ) 
 
     # freeze the base model
-    freeze_base_model(base_model)
+    freeze_base_model(feature_extractor)
 
-    # add trainable layers
-    model = add_layers(base_model, classes) 
+    x = feature_extractor.output 
+
+    # change the spatial dimensions to 1x1
+    # thus, the output becomes (batch_size, 1, 1, 2048)
+    x = GlobalAveragePooling2D()(x)
+
+    # fully connected layer for intermediate features
+    x = Dense(1024, activation='relu')(x)
+
+    # dropout layer to prevent overfitting
+    # 50% of the input will be dropped to zero
+    x = Dropout(0.5)(x)
+
+    # final output layer
+    predictions = Dense(classes, activation='softmax')(x)
+
+    # create the model
+    model = Model(inputs=feature_extractor.input, outputs=predictions)
+    
+    # compile the model
+    model.compile(loss="categorical_crossentropy", optimizer=Adam(), metrics=["accuracy"])
 
     return model    
