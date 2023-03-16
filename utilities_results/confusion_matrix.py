@@ -8,23 +8,25 @@ def make_confusion_matrix(validation_ds, model):
     """Makes a confusion matrix for the model
 
     Args:
-        validation_ds (keras.preprocessing.image.ImageDataGenerator): validation dataset might be another type of dataset
-        model (keras.engine.functional.Functional): model to be evaluated
+        validation_ds (tf.data.Dataset): validation dataset
+        model (keras.Model): model to be evaluated
 
     Returns:
         numpy.ndarray: 2D array
     """
 
-    validation_samples = len(validation_ds)
-    # Next, use the model to make predictions on the validation set
-    validation_predictions = model.predict(validation_ds, steps=validation_samples)
-    # Convert the predictions to class labels
-    validation_predictions = np.argmax(validation_predictions, axis=-1)
+    y_true = []
+    y_pred = []
 
-    matrix = confusion_matrix(validation_ds.classes, validation_predictions)
+    # Iterate through the validation dataset and collect true labels and predictions
+    for x, y in validation_ds:
+        y_true.extend(np.argmax(y.numpy(), axis=-1))
+        y_pred.extend(np.argmax(model.predict(x), axis=-1))
+
+    # Calculate the confusion matrix
+    matrix = confusion_matrix(y_true, y_pred)
 
     return matrix
-
 
 
 def plot_confusion_matrix(matrix, class_names):
