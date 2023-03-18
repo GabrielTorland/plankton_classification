@@ -1,5 +1,5 @@
 from tensorflow.keras.applications import DenseNet121, DenseNet169, DenseNet201
-from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 
