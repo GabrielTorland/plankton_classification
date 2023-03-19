@@ -1,6 +1,6 @@
-from tensorflow.keras.layers import GlobalAveragePooling2D, Dense, Dropout
+from tensorflow.keras.layers import GlobalAveragePooling2D, Dense, Dropout, Flatten
 from tensorflow.keras import Model
-from tensorflow.keras.applications import VGG16, Flatten, Dense, Dropout
+from tensorflow.keras.applications import VGG16
 from tensorflow.keras.optimizers import Adam
 
 DEFAULT_INPUT_SHAPE = (224, 224, 3)
