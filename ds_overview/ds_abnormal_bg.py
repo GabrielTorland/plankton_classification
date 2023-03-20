@@ -3,6 +3,8 @@ import numpy as np
 import os
 import json
 import shutil
+import platform
+import argparse
 
 
 # change the current working directory to the directory of this file
@@ -92,7 +94,12 @@ def manually_validate_anomalies(avg_bgs, paths, std_factor=4):
     mean = np.mean(avg_bgs)
     for i, avg_bg in enumerate(avg_bgs):
         if abs(avg_bg - mean) > std_factor*std:
-            print(paths[i].split("/")[-2])
+            if platform.system() == "Windows":
+                print(paths[i].split("\\")[-2])
+            elif platform.system() == "Linux":    
+                print(paths[i].split("/")[-2])
+            else:
+                raise NotImplementedError("This platform is not supported yet.")    
             print("Mean: ", avg_bg)
             img = cv2.imread(paths[i])
             cv2.imshow("anomaly", img)
@@ -109,10 +116,20 @@ def manually_validate_anomalies(avg_bgs, paths, std_factor=4):
             if input() in ['', 'Y', 'y']:
                 if not os.path.exists("anomalies"):
                     os.mkdir("anomalies")
-                dir = "anomalies/" + paths[i].split("/")[-2]
+                if platform.system() == "Windows":
+                    dir = os.path.join("anomalies", paths[i].split("\\")[-2])
+                elif platform.system() == "Linux":
+                    dir = os.path.join("anomalies", paths[i].split("/")[-2])
+                else:
+                    raise NotImplementedError("This platform is not supported yet.")
                 if not os.path.exists(dir):
                     os.mkdir(dir)
-                shutil.move(paths[i], dir + "/" + paths[i].split("/")[-1])
+                if platform.system() == "Windows":
+                    shutil.move(paths[i], os.path.join(dir, paths[i].split("\\")[-1]))
+                elif platform.system() == "Linux":
+                    shutil.move(paths[i], dir + "/" + paths[i].split("/")[-1])
+                else:
+                    raise NotImplementedError("This platform is not supported yet.")
                 print("Image successfully moved.")
             print()
 
@@ -138,11 +155,22 @@ def copy_anomalies(avg_bgs, paths, std_factor=4):
         if abs(avg_bg - mean) > std_factor*std:
             if not os.path.exists("anomalies"):
                 os.mkdir("anomalies")
-            dir = "anomalies/" + paths[i].split("/")[-2]
+            if platform.system() == "Windows":
+                dir = "anomalies\\" + paths[i].split("\\")[-2]
+            elif platform.system() == "Linux":
+                dir = "anomalies/" + paths[i].split("/")[-2]
+            else:
+                raise NotImplementedError("This platform is not supported yet.")    
             if not os.path.exists(dir):
                 os.mkdir(dir)
-            shutil.copy(paths[i], dir + "/" + paths[i].split("/")[-1])
-            anomalies[paths[i].split("/")[-1]] = paths[i]
+            if platform.system() == "Windows":
+                shutil.copy(paths[i], os.path.join(dir, paths[i].split("\\")[-1]))
+                anomalies[paths[i].split("\\")[-1]] = paths[i]
+            elif platform.system() == "Linux":
+                shutil.copy(paths[i], os.path.join(dir, paths[i].split("/")[-1]))
+                anomalies[paths[i].split("/")[-1]] = paths[i]
+            else:
+                raise NotImplementedError("This platform is not supported yet.")    
             print("Image successfully copied.")
     return anomalies
 
@@ -184,17 +212,28 @@ def open_anomalies(path="anomaly_path.json"):
 
 
 if __name__ == "__main__":
-    #avg_bgs, paths = get_background_dist("path/to/dataset")
-    # or 
-    #avg_bgs, paths = load_dist("background_dist.json") # requires a json file with the distribution and associated pathsn
+    parser = argparse.ArgumentParser(description="This script provides a way to identify anomalies in the baseline training set.")
+    parser.add_argument("-s", "--source", type=str, help="Path to the baseline training set.")
+    parser.add_argument("-d", "--dist", type=str, help="Path to the json file containing the distribution and associated paths.")
+    parser.add_argument("-c", "--copy", type=bool, default=False, help="Copy the anomalies to a new directory.")
+    parser.add_argument("-m", "--manual", type=bool, default=False, help="Manually validate the anomalies.")
+    parser.add_argument("-r", "--remove", type=bool, default=False, help="Remove the anomalies.")
+    parser.add_argument("--std", type=int, default=4, help="Standard deviation factor used to identify anomalies.")
+    args = parser.parse_args()
 
-    # uncomment to store the distribution and associated paths
-    #store_dist("background_dist.json", avg_bgs, paths) 
-
-    #manually_validate_anomalies(avg_bgs, paths)
-    #anomalies = copy_anomalies(avg_bgs, paths)
-    #store_anomalies(anomalies)
-    anomalies = open_anomalies()
-    delete_anomalies(anomalies)
+    if args.source:
+        avg_bgs, paths = get_background_dist(args.source)
+        # store the distribution and associated paths in a json file
+        store_dist("background_dist.json", avg_bgs, paths) 
+    else:
+        avg_bgs, paths = load_dist("background_dist.json") # requires a json file with the distribution and associated pathsn
+    if args.copy:    
+        anomalies = copy_anomalies(avg_bgs, paths, args.std)
+        store_anomalies(anomalies)
+    if args.manual:
+        manually_validate_anomalies(avg_bgs, paths, args.std)
+    if args.remove:
+        anomalies = open_anomalies()
+        delete_anomalies(anomalies)
 
 
