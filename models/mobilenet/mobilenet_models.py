@@ -18,7 +18,7 @@ def freeze_base_model(model):
         layer.trainable = False
 
 
-def create_mobilenetv3_model(num_classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT_INPUT_SHAPE):
+def create_mobilenetv3_large_model(num_classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT_INPUT_SHAPE):
     """
     Create a new MobilenetV3 model with transfer learning. 
 
@@ -51,11 +51,51 @@ def create_mobilenetv3_model(num_classes, weights=DEFAULT_WEIGHTS, input_shape=D
     x = Dense(1024, activation='relu')(x)
 
     # dropout layer to prevent overfitting
-    # 50% of the input will be dropped to zero
     x = Dropout(0.5)(x)
 
+    # final output layer
+    predictions = Dense(num_classes, activation='softmax')(x)
+
+    # create the model
+    model = Model(inputs=feature_extractor.input, outputs=predictions)
+    
+    # compile the model
+    model.compile(loss="categorical_crossentropy", optimizer=Adam(), metrics=["accuracy"])
+
+    return model 
+
+
+def create_mobilenetv3_small_model(num_classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT_INPUT_SHAPE):
+    """
+    Create a new MobilenetV3 model with transfer learning. 
+
+    Args:
+        weights (str, optional): Initial weights. Defaults to "imagenet".
+        input_shape (tuple, optional): Shape of input images. Defaults to (224, 224, 3).
+
+    Returns:
+        tf.keras.application.ResNet152 : Model. 
+    """
+
+    # create a base model
+    feature_extractor = MobileNetV3Small(
+        include_top=False, # do not include the classification layer
+        weights=weights, # load pre-trained weights
+        input_shape=input_shape # specify input shape
+    ) 
+
+    # freeze the base model
+    freeze_base_model(feature_extractor)
+
+    # add fully connected layers after the base model (i.e., at the end of the network)
+    x = feature_extractor.output 
+
+    # change the spatial dimensions to 1x1
+    # thus, the output becomes (batch_size, 1, 1, 2048)
+    x = GlobalAveragePooling2D()(x)
+
     # fully connected layer for intermediate features
-    x = Dense(512, activation='relu')(x)
+    x = Dense(1024, activation='relu')(x)
 
     # dropout layer to prevent overfitting
     x = Dropout(0.5)(x)
