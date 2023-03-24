@@ -1,6 +1,6 @@
 from tensorflow.keras.layers import GlobalAveragePooling2D, Dense, Dropout, Flatten, BatchNormalization
 from tensorflow.keras import Model
-from tensorflow.keras.applications import MobileNetV3Large
+from tensorflow.keras.applications import MobileNetV3Large, MobileNetV3Small
 from tensorflow.keras.optimizers import Adam
 
 
@@ -20,14 +20,14 @@ def freeze_base_model(model):
 
 def create_mobilenetv3_large_model(num_classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT_INPUT_SHAPE):
     """
-    Create a new MobilenetV3 model with transfer learning. 
+    Create a new MobilenetV3Large model with transfer learning. 
 
     Args:
         weights (str, optional): Initial weights. Defaults to "imagenet".
         input_shape (tuple, optional): Shape of input images. Defaults to (224, 224, 3).
 
     Returns:
-        tf.keras.application.ResNet152 : Model. 
+        tf.keras.application.MobileNetV3Large : Model. 
     """
 
     # create a base model
@@ -67,14 +67,14 @@ def create_mobilenetv3_large_model(num_classes, weights=DEFAULT_WEIGHTS, input_s
 
 def create_mobilenetv3_small_model(num_classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT_INPUT_SHAPE):
     """
-    Create a new MobilenetV3 model with transfer learning. 
+    Create a new MobileNetV3Small model with transfer learning. 
 
     Args:
         weights (str, optional): Initial weights. Defaults to "imagenet".
         input_shape (tuple, optional): Shape of input images. Defaults to (224, 224, 3).
 
     Returns:
-        tf.keras.application.ResNet152 : Model. 
+        tf.keras.application.MobileNetV3Small : Model. 
     """
 
     # create a base model
