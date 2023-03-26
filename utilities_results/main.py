@@ -70,7 +70,5 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate a confusion matrix from a trained CNN model.')
     parser.add_argument('-m', '--model', type=str, help='Path to the trained model')
     parser.add_argument('-d', '--dataset', type=str, help='Path to the test data directory')
-    #args = parser.parse_args()
-    # Debug option
-    args = parser.parse_args(['-m', 'C:/Users/Andreas/plankton_classification/artifacts/model-sunny-puddle-1-v7/', '-d', 'C:/Users/Andreas/plankton_classification/organized_dataset_v5/dataset/test/'])
+    args = parser.parse_args()
     main(args)
