@@ -1,20 +1,26 @@
-from sklearn.metrics import confusion_matrix, precision_recall_curve, auc, roc_curve, precision_score, recall_score, f1_score, average_precision_score
+from sklearn.metrics import confusion_matrix, precision_recall_curve, roc_curve, precision_score, recall_score, f1_score, average_precision_score
 import matplotlib.pyplot as plt
 import numpy as np
 import itertools
 import pandas as pd
 
 
-def plot_confusion_matrix(y_true, y_pred, class_names):
+
+
+def plot_confusion_matrix(y_true, y_pred, class_names, normalize=False):
     """Makes a plot for the confusion matrix
 
     Args:
         y_true (list): A list of integers representing the true classes
         y_pred (list): A list of integers representing the predicted classes
-        class_names (list): A list of strings representing the class names in the order of the matrixs
+        class_names (list): A list of strings representing the class names in the order of the matrix
+        normalize (bool): Whether to normalize the confusion matrix. Defaults to False.
     """
 
     matrix = confusion_matrix(y_true, y_pred)
+    
+    if normalize:
+        matrix = matrix.astype('float') / matrix.sum(axis=1)[:, np.newaxis]
 
     plt.figure(figsize=(12, 10))
 
@@ -29,20 +35,24 @@ def plot_confusion_matrix(y_true, y_pred, class_names):
     plt.yticks(fontsize=7)
 
     # Add a title and x and y labels
-    plt.title("Confusion Matrix")
+    plt.title("Normalized Confusion Matrix" if normalize else "Confusion Matrix")
     plt.xlabel("Predicted Class")
     plt.ylabel("True Class")
 
     # Add grid lines
     plt.grid(False)
 
-
     # Add text to the cells
+    fmt = '.2f' if normalize else 'd'
+    threshold = matrix.max() / 2.
     for i, j in itertools.product(range(matrix.shape[0]), range(matrix.shape[1])):
-        plt.text(j, i, matrix[i, j], horizontalalignment="center", color="black")
-    plt.savefig('confusion_matrix.png', bbox_inches='tight')
+        cell_value = matrix[i, j]
+        plt.text(j, i, format(cell_value, fmt),
+                 horizontalalignment="center",
+                 color="white" if cell_value > threshold else "black")
+    
+    plt.savefig('confusion_matrix.png' if not normalize else 'normalized_confusion_matrix.png', bbox_inches='tight')
     plt.show()
-
 
 
 

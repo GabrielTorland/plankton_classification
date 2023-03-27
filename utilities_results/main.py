@@ -43,10 +43,13 @@ def main(args):
     # Plot and save the confusion matrix
     plot_confusion_matrix(y_true, y_pred, test_ds.class_names)
 
-    # Plot the precision-recall curve
+    # Plot and save the normalized confusion matrix
+    plot_confusion_matrix(y_true, y_pred, test_ds.class_names, normalize=True)
+
+    # Plot and save the precision-recall curve
     plot_pr_curve(y_true, y_pred_vector, test_ds.class_names)
 
-    # Plot the ROC curve
+    # Plot and save the ROC curve
     plot_roc_curve(y_true, y_pred_vector, test_ds.class_names)
 
     # Print the F1 scores
