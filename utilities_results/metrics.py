@@ -192,16 +192,20 @@ def calculate_auc_pr(y_true, y_pred_probs, class_names):
 
     y_true_one_hot = np.eye(n_classes)[y_true]
     auc_pr_micro = average_precision_score(y_true_one_hot, y_pred_probs, average='micro')
+    auc_pr_macro = average_precision_score(y_true_one_hot, y_pred_probs, average='macro')
 
-    return auc_pr_scores, auc_pr_micro
+    return auc_pr_scores, auc_pr_micro, auc_pr_macro
 
 
 def display_auc_pr_table(y_true, y_pred_probs, class_names):
-    auc_pr_scores, auc_pr_micro = calculate_auc_pr(y_true, y_pred_probs, class_names)
+    auc_pr_scores, auc_pr_micro, auc_pre_macro = calculate_auc_pr(y_true, y_pred_probs, class_names)
 
     data = {'Class': class_names, 'AUC-PR': auc_pr_scores}
     data['Class'].append('Micro-average')
     data['AUC-PR'].append(auc_pr_micro)
+    data['Class'].append('Macro-average')
+    data['AUC-PR'].append(auc_pre_macro)
+
 
     df = pd.DataFrame(data)
     return df
