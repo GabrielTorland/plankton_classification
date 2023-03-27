@@ -22,7 +22,7 @@ def create_densenet121_model(classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAU
     """Creates the DenseNet121 model.
 
     Returns:
-        keras.engine.functional.Functional: The DenseNet201 model.
+        keras.engine.functional.Functional: The DenseNet121 model.
     """
     # Load the DenseNet121 model
     base_model = DenseNet121(
@@ -61,7 +61,7 @@ def create_densenet169_model(classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAU
     """Creates the DenseNet169 model.
 
     Returns:
-        keras.engine.functional.Functional: The DenseNet201 model.
+        keras.engine.functional.Functional: The DenseNet169 model.
     """
     # Load the DenseNet169 model
     base_model = DenseNet169(
