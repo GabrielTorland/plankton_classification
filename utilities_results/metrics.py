@@ -40,7 +40,7 @@ def plot_confusion_matrix(y_true, y_pred, class_names):
     # Add text to the cells
     for i, j in itertools.product(range(matrix.shape[0]), range(matrix.shape[1])):
         plt.text(j, i, matrix[i, j], horizontalalignment="center", color="black")
-    plt.savefig('confusion_matrix.png')
+    plt.savefig('confusion_matrix.png', bbox_inches='tight')
     plt.show()
 
 
@@ -76,6 +76,7 @@ def plot_pr_curve(y_true, y_pred, class_names):
     plt.ylabel('Precision')
     plt.title('Precision-Recall Curve')
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.savefig('pr-curve.png', bbox_inches='tight')
     plt.show()
 
 
@@ -97,14 +98,14 @@ def plot_roc_curve(y_true, y_pred, class_names):
         y_pred_class = y_pred[:, i]
         
         fpr, tpr, _ = roc_curve(y_true_class, y_pred_class)
-        roc_auc = auc(fpr, tpr)
         
-        plt.plot(fpr, tpr, label=f'{class_names[i]} (AUC = {roc_auc:.2f})')
+        plt.plot(fpr, tpr, label=f'{class_names[i]}')
 
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
     plt.title('Receiver Operating Characteristic (ROC) Curve')
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.savefig('roc-curve.png', bbox_inches='tight')
     plt.show()
 
 
