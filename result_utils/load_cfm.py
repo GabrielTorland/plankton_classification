@@ -7,7 +7,7 @@ def main(args):
     model = tf.keras.models.load_model(args.model)
 
     # Load the data
-    test_ds = keras.utils.image_dataset_from_directory(
+    test_ds = tf.keras.utils.image_dataset_from_directory(
     directory=args.dataset,
     labels='inferred',
     label_mode='categorical',
@@ -17,10 +17,10 @@ def main(args):
     )
 
     # Create the confusion matrix
-    cm = make_confusion_matrix(test_data, model)
+    cm = make_confusion_matrix(test_ds, model)
     
     # Plot and save the confusion matrix
-    plot_confusion_matrix(cm, args.class_names_path)
+    plot_confusion_matrix(cm, test_ds.class_names)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate a confusion matrix from a trained CNN model.')
