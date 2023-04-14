@@ -33,7 +33,7 @@ def create_vgg16_model(num_classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT
     feature_extractor = VGG16(
         include_top=False, # do not include the classification layer
         weights=weights, # load pre-trained weights
-        pooling='max', # use max pooling
+        pooling=None, # use max pooling
         input_shape=input_shape # specify input shape
     )
 
