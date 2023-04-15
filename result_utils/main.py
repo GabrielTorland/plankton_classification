@@ -1,6 +1,6 @@
 import argparse
 import tensorflow as tf
-from metrics import plot_confusion_matrix, plot_roc_curve, plot_pr_curve, print_f1_scores, top_k_error, print_precision_recall, display_auc_pr_table
+from metrics import plot_confusion_matrix, plot_roc_curve, plot_pr_curve, print_f1_scores, top_k_error, print_precision_recall, display_auc_pr_table, print_confusion_matrix_console
 import numpy as np
 
 
@@ -67,6 +67,16 @@ def main(args):
     # Print the AUC-PR table
     table = display_auc_pr_table(y_true, y_pred_vector, test_ds.class_names)
     print(table)
+
+    print()
+
+    # Print the confusion matrix in the console
+    print_confusion_matrix_console(y_true, y_pred, test_ds.class_names)
+    print()
+    
+    # Print the normalized confusion matrix in the console
+    print_confusion_matrix_console(y_true, y_pred, test_ds.class_names, normalize=True)
+
 
 
 if __name__ == '__main__':

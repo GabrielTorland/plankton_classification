@@ -56,6 +56,36 @@ def plot_confusion_matrix(y_true, y_pred, class_names, normalize=False):
 
 
 
+def print_confusion_matrix_console(y_true, y_pred, class_names, normalize=False):
+    """Makes a plot for the confusion matrix
+
+    Args:
+        y_true (list): A list of integers representing the true classes
+        y_pred (list): A list of integers representing the predicted classes
+        class_names (list): A list of strings representing the class names in the order of the matrix
+        normalize (bool): Whether to normalize the confusion matrix. Defaults to False.
+    """
+        
+    # Compute the confusion matrix
+    cm = confusion_matrix(y_true, y_pred)
+
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        fmt = "{:.2f}"
+    else:
+        fmt = "{:d}"
+
+    # Print the confusion matrix with class names
+    header = " " * (len(max(class_names, key=len)) + 2)
+    for name in class_names:
+        header += f"{name:>{len(fmt)}} "
+    print(header)
+
+    for i, (name, row) in enumerate(zip(class_names, cm)):
+        row_text = f"{name:>{len(max(class_names, key=len)) + 1}} "
+        row_text += " ".join([fmt.format(value) for value in row])
+        print(row_text)
+
 
 def plot_pr_curve(y_true, y_pred, class_names):
     """Makes a plot for the precision-recall curve
