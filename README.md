@@ -41,7 +41,25 @@ pip install -r requirements.txt
 
 # Licence
 
+This project is licensed under the MIT License.
+
+The MIT License is a short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.
+
+Here's a summary of the key points:
+
+- **Use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software**: You can do almost anything with the software, from downloading it and using it for personal projects, to incorporating it into your own software and distributing it, even commercially.
+
+- **Inclusion of copyright and license notices**: If you use this software in your own work, you need to include the original copyright and license notice.
+
+- **The software is provided 'as is', without any warranty or conditions**: The author of the software is not responsible if the software doesn't work, or if it causes any damage. You're using it at your own risk.
+
+For the exact terms, see the [LICENSE](LICENSE) file in the project root.
 
 # Contact
+If you have any questions about the project, please feel free to reach out:
+
+**Gabriel Torland**  
+[<img align="left" alt="gmail" width="22px" src="https://cdn-icons-png.flaticon.com/512/281/281769.png" />](mailto:your-email@example.com) gabri.torland@gmail.com  
+[<img align="left" alt="github" width="22px" src="https://cdn-icons-png.flaticon.com/512/25/25231.png" />](https://github.com/yourusername) @GabrielTorland
 
 
