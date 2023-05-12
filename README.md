@@ -2,51 +2,53 @@
 
 This repository contains the code for a plankton classifier built with the Keras deep learning library. The model is trained to identify different species of plankton from images, using a dataset of 27,900 RGB FlowCam images with a resolution of 120x120x3. This work is based on a bachelor thesis by Gabriel Torland, Kim Svalde, and Andreas Primstad.
 
-.gitignore
-LICENSE
-README.md
-ds_utils
-   |-- ds_abnormal_bg.py
-   |-- ds_balancer_v1.py
-   |-- ds_balancer_v2.py
-   |-- ds_overview.py
-   |-- ds_padder.py
-   |-- ds_parser.py
-   |-- ds_remove_classes.py
-   |-- ds_splitter.py
-   |-- ds_unsplit.py
-   |-- make_datasets.bat
-   |-- make_datasets.sh
-models
-   |-- densenet
-   |   |-- densenet.ipynb
-   |   |-- densenet_models.py
-   |-- efficientnet
-   |   |-- efficientnet_models.py
-   |   |-- efficientnetb0.ipynb
-   |   |-- efficientnetb7.ipynb
-   |   |-- train_efficientnet_scratch.ipynb
-   |-- inception
-   |   |-- inceptionv3.ipynb
-   |   |-- inceptionv3_models.py
-   |-- mobilenet
-   |   |-- mobilenet.ipynb
-   |   |-- mobilenet_models.py
-   |-- resnet
-   |   |-- resnet152.ipynb
-   |   |-- resnet152V2.ipynb
-   |   |-- resnet_models.py
-   |   |-- start_training.sh
-   |   |-- train_resnets_scratch.ipynb
-   |-- vgg16
-   |   |-- vgg16.ipynb
-   |   |-- vgg16_models.py
-requirements.txt
-result_utils
-   |-- compare_cms.py
-   |-- grade_color.py
-   |-- main.py
-   |-- metrics.py
+.
+├── .gitignore
+├── LICENSE
+├── README.md
+├── ds_utils
+│   ├── ds_abnormal_bg.py
+│   ├── ds_balancer_v1.py
+│   ├── ds_balancer_v2.py
+│   ├── ds_overview.py
+│   ├── ds_padder.py
+│   ├── ds_parser.py
+│   ├── ds_remove_classes.py
+│   ├── ds_splitter.py
+│   ├── ds_unsplit.py
+│   ├── make_datasets.bat
+│   └── make_datasets.sh
+├── models
+│   ├── densenet
+│   │   ├── densenet.ipynb
+│   │   └── densenet_models.py
+│   ├── efficientnet
+│   │   ├── efficientnet_models.py
+│   │   ├── efficientnetb0.ipynb
+│   │   ├── efficientnetb7.ipynb
+│   │   └── train_efficientnet_scratch.ipynb
+│   ├── inception
+│   │   ├── inceptionv3.ipynb
+│   │   └── inceptionv3_models.py
+│   ├── mobilenet
+│   │   ├── mobilenet.ipynb
+│   │   └── mobilenet_models.py
+│   ├── resnet
+│   │   ├── resnet152.ipynb
+│   │   ├── resnet152V2.ipynb
+│   │   ├── resnet_models.py
+│   │   ├── start_training.sh
+│   │   └── train_resnets_scratch.ipynb
+│   └── vgg16
+│       ├── vgg16.ipynb
+│       └── vgg16_models.py
+├── requirements.txt
+└── result_utils
+    ├── compare_cms.py
+    ├── grade_color.py
+    ├── main.py
+    └── metrics.py
+
 
 ## Data
 
