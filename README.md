@@ -39,6 +39,8 @@ Then, install the required dependencies:
 pip install -r requirements.txt
 ```
 
+Now you should be able to execute any script in the repository!
+
 # Licence
 
 This project is licensed under the MIT License.
@@ -59,7 +61,15 @@ For the exact terms, see the [LICENSE](LICENSE) file in the project root.
 If you have any questions about the project, please feel free to reach out:
 
 **Gabriel Torland**  
-[<img align="left" alt="gmail" width="22px" src="https://cdn-icons-png.flaticon.com/512/281/281769.png" />](mailto:your-email@example.com) gabri.torland@gmail.com  
+[<img align="left" alt="gmail" width="22px" src="https://cdn-icons-png.flaticon.com/512/281/281769.png" />](mailto:gabri.torland@gmail.com) gabri.torland@gmail.com  
 [<img align="left" alt="github" width="22px" src="https://cdn-icons-png.flaticon.com/512/25/25231.png" />](https://github.com/GabrielTorland) @GabrielTorland
+
+**Kim Andre Svalde**  
+[<img align="left" alt="gmail" width="22px" src="https://cdn-icons-png.flaticon.com/512/281/281769.png" />](mailto:kimsvalde@gmail.com) kimsvalde@gmail.com  
+[<img align="left" alt="github" width="22px" src="https://cdn-icons-png.flaticon.com/512/25/25231.png" />](https://github.com/kimdal1) @kimdal1
+
+**Andreas Primstad**  
+[<img align="left" alt="gmail" width="22px" src="https://cdn-icons-png.flaticon.com/512/281/281769.png" />](mailto:andreaspri@live.no) andreaspri@live.no  
+[<img align="left" alt="github" width="22px" src="https://cdn-icons-png.flaticon.com/512/25/25231.png" />](https://github.com/Andreaspri) @Andreaspri
 
 
