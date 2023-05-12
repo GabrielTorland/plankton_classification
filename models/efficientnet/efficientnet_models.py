@@ -36,8 +36,10 @@ def create_efficientnetb0_model(num_classes, weights=DEFAULT_WEIGHTS, input_shap
         include_top=False, # do not include the classification layer
         weights=weights, # load pre-trained weights
         input_shape=input_shape # specify input shape
-    ) 
-
+    )
+    
+    # freeze the base model
+    freeze_base_model(feature_extractor)
 
     # add fully connected layers after the base model (i.e., at the end of the network)
     x = feature_extractor.output 
