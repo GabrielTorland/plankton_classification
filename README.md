@@ -60,6 +60,6 @@ If you have any questions about the project, please feel free to reach out:
 
 **Gabriel Torland**  
 [<img align="left" alt="gmail" width="22px" src="https://cdn-icons-png.flaticon.com/512/281/281769.png" />](mailto:your-email@example.com) gabri.torland@gmail.com  
-[<img align="left" alt="github" width="22px" src="https://cdn-icons-png.flaticon.com/512/25/25231.png" />](https://github.com/yourusername) @GabrielTorland
+[<img align="left" alt="github" width="22px" src="https://cdn-icons-png.flaticon.com/512/25/25231.png" />](https://github.com/GabrielTorland) @GabrielTorland
 
 
