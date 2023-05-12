@@ -11,13 +11,9 @@ The dataset under study is comprised of FlowCam images acquired during voyages i
 In the second benchmark of this project, the script `ds_utils/ds_balancer_v1.py` was employed to achieve full dataset balance through a combination of undersampling and oversampling techniques. In contrast, the third benchmark solely utilized oversampling, which the script `ds_utils/ds_balancer_v2.py` were responsible for.
 
 
-## Model
+## Model & Training
 
-The model is a convolutional neural network (CNN) trained using the Adam optimization algorithm. The architecture of the CNN is defined in the `model.py` file.
-
-## Training
-
-The model is trained using the `train.py` script. The training process can be customized with various parameters such as the number of epochs and the batch size.
+The scripts responsible for training the respective models in this project are housed within the subdirectories of the models directory (e.g., models/resnet). Each subdirectory is named to denote the corresponding network undergoing training. Predominantly, these scripts are in Jupyter Notebook format, enhancing the readability and interpretability of the code.
 
 ## Evaluation
 
