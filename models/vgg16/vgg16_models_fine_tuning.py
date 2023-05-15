@@ -13,7 +13,7 @@ def freeze_base_model(model):
         model (tensorflow.keras.applications.*): Base model. 
     """    
     for layer in model.layers:
-        layer.trainable = False
+        layer.trainable = True
 
 def create_vgg16_model(num_classes, weights=DEFAULT_WEIGHTS, input_shape=DEFAULT_INPUT_SHAPE):
     """
